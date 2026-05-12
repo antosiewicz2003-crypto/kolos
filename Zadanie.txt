@@ -1,0 +1,140 @@
+
+
+Napisz program do wykonywania podstawowych operacji na obrazach.
+
+W tym celu przegotuj funkcje zgodnie z poniższą specyfikacją. Kod przygotowanych funkcji umieść w pliku defs.c a prototypy oraz struktury danych i typy wyliczeniowe w pliku defs.h.
+
+struct img_t* load_image(const char* fname, enum error_code_t* errorCode);
+struct img_t* image_threshold(const struct img_t* input, enum error_code_t* errorCode);
+int area_statistics(const struct img_t* input, struct area_t** areas, int* counter);
+
+void destroy_img(struct img_t* input);
+
+Przygotuj typ wyliczeniowy error_code_t i zadeklaruj go w pliku defs.h. Typ wyliczeniowy ma posiadać następujące pola:
+
+ERROR_CODE_OK - 0
+ERROR_CODE_INCORRECT_PARAMETERS - 1
+ERROR_CODE_FILE_NOT_EXISTS - 2
+ERROR_CODE_FILE_CORRUPTED - 3
+ERROR_CODE_COULDNT_CREATE_FILE - 4
+ERROR_CODE_FAILED_TO_ALLOCATE_MEMORY - 5
+
+Przygotuj następujące struktury do przechowywania danych o obrazach:
+
+struct img_t
+{
+    uint8_t **img;
+    int width;
+    int height;
+};
+
+struct area_t
+{
+    int size;
+    int left_x;
+    int top_y;
+};
+
+Struktura img_t przechowuje obraz w postaci tablicy dwuwymiarowej w polu img oraz informacje o jego wymiarach: szerokości (pole width) i wysokości (pole height). Struktura area_t przechowuje informacje o rozmiarach (pole size) oraz współrzędnych (w postaci lewego - pole left_x, górnego - pole top_y rogu obrazu) poszczególnych obszarów znajdujących się na obrazie.
+Wczytanie obrazu
+
+struct img_t* load_image(const char* fname, enum error_code_t* errorCode);
+
+Funkcja load_image odczytuje z pliku binarnego o nazwie fname obraz w formacie PGM (Portable Gray Map) i zapisuje jego zawartość w postaci alokowanej dynamicznie tablicy dwuwymiarowej do struktury img_t. Funkcja zwraca wczytany obraz wraz z jego wymiarami zapisanymi w strukturze img_t, a w przypadku błędu zwraca NULL oraz zapisuje kod błędu do zmiennej errorCode (brak przekazania parametru errorCode powinien skutkować natychmiastowym zakończeniem działania funkcji).
+
+Plik PGM to obraz w skali szarości zapisany w formacie przenośnej szarej mapy (PGM), gdzie każdy piksel jest zakodowany jednym bajtem (8 bitów). Obraz składa się z siatki liczb reprezentujących różne odcienie szarości, z zakresu od czerni (0) do bieli (255). Pliki PGM mogą być przechowywane w formacie tekstowym ASCII lub binarnym.
+
+Nagłówek pliku składa się z dwóch bajtów, które zawierają informację o formacie binarnym PGM - "P2". Następnie na kolejnych 8 bajtach zapisane są informacje o szerokości i wysokości obrazu, z każdą wartością zapisaną na 4 bajtach. Po tych danych następuje jeden bajt, w którym zapisana jest maksymalna wartość, jaką piksele mogą przyjąć.
+
+Każdy piksel obrazu jest zapisany na 1 bajcie, a wartość każdego bajtu odpowiada konkretnemu odcieniowi szarości. W ten sposób, dla obrazu o wymiarach n x m, plik PGM ma długość (2 + 8 + 1 + n x m) bajtów.
+Wartość zwracana
+
+Kody błędu
+
+ERROR_CODE_OK - w przypadku powodzenia.
+ERROR_CODE_INCORRECT_PARAMETERS - w przypadku przekazania do funkcji nieprawidłowych danych.
+ERROR_CODE_FILE_NOT_EXISTS - gdy plik o podanej nazwie nie istnieje.
+ERROR_CODE_FILE_CORRUPTED - gdy plik ma niepoprawny format lub zawiera błędy.
+ERROR_CODE_FAILED_TO_ALLOCATE_MEMORY - w przypadku niepowodzenia alokacji pamięci.
+
+Wymagania pamięciowe
+
+Funkcja nie może zaalokować więcej pamięci niż jest to niezbędne do posiadania w pamięci obrazu wczytanego z pliku.
+Progowanie obrazu
+
+Funkcja image_threshold ma przetworzyć obraz wejściowy (input) w nowy obraz czarno - biały, gdzie wszystkie piksele o wartości większej od wartości średniej ze wszystkich wartości obrazu przyjmują wartość 255, a pozostałe piksele wartość 0. Funkcja zwraca przetworzony obraz wraz z jego wymiarami zapisanymi w strukturze img_t, a w przypadku błędu zwraca NULL oraz zapisuje kod błędu do zmiennej errorCode (brak przekazania parametru errorCode powinien skutkować natychmiastowym zakończeniem działania funkcji).
+
+struct img_t* image_threshold(const struct img_t* input, enum error_code_t* errorCode)
+
+Wymagania pamięciowe
+
+Funkcja nie może zaalokować więcej pamięci niż jest to niezbędne do posiadania w pamięci przetworzonego obrazu.
+Wartość zwracana
+
+Kody błędu
+
+ERROR_CODE_OK - w przypadku powodzenia.
+ERROR_CODE_INCORRECT_PARAMETERS - w przypadku przekazania do funkcji nieprawidłowych danych.
+ERROR_CODE_FAILED_TO_ALLOCATE_MEMORY - w przypadku niepowodzenia alokacji pamięci.
+
+Segmentacja obrazu
+
+Wykorzystując strukturę area_t przygotuj funkcję do segmentacji obrazu - podziału obrazu na obszary pikseli o takiej samej wartości. Piksele mogą ze sobą sąsiadować w 8 kierunkach.
+
+int area_statistics(const struct img_t* input, struct area_t** areas, int* counter);
+
+Funkcja area_statistics zapisuje informacje on obszarach pikseli znajdujących się w obrazie to tablicy struktur area_t. Obszary mają być analizowane począwszy od lewego górnego rogu obrazu.
+Parametry funkcji:
+
+    input - obraz wejściowy,
+    areas - adres pamięci, do której ma zostać zapisana jednowymiarowa tablica struktur,
+    counter - rozmiar zwracanej tablicy struktur.
+
+Wartość zwracana
+
+Funkcja zwraca:
+
+* 0 - funkcja zakończyła się powodzeniem.
+* -1 - w przypadku przekazania do funkcji nieprawidłowych danych.
+* -2 - w przypadku niepowodzenia alokacji pamięci.
+
+Wymagania pamięciowe
+
+Funkcja ma zaalokować pamięć na dodatkową tablicę o wymiarach obrazu wejściowego (będzie potrzebna do zaznaczania, które piksele były już przeanalizowane) oraz tyle pamięci niż ile jest niezbędne do posiadania w pamięci tablicy struktur.
+Przykład
+
+Zakładając obraz jak poniżej, możemy wyróżnić trzy oddzielne obszary pikseli o tej samej wartości, obszar pikseli o wartości 0 zaczynający się w punkcie (0, 0), obszar pikseli o wartości 13 zaczynający się w punkcie (3, 3) oraz obszar pikseli o wartości 26 zaczynający się w punkcie (8, 7).
+
+Przykładowy obrazek: obrazek2.bin
+
+000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000⏎
+000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000⏎
+000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000⏎
+000 000 000 013 013 013 013 013 013 013 000 000 000 000 000 000 000 000 000 000 000 000 000 000⏎
+000 000 000 013 013 013 013 013 013 013 000 000 000 000 000 000 000 000 000 000 000 000 000 000⏎
+000 000 000 013 013 013 013 013 013 013 000 000 000 000 000 000 000 000 000 000 000 000 000 000⏎
+000 000 000 013 013 013 013 013 013 013 000 000 000 000 000 000 000 000 000 000 000 000 000 000⏎
+000 000 000 013 013 013 013 013 013 013 000 000 000 000 000 000 000 000 000 000 000 000 000 000⏎
+000 000 000 013 013 013 013 026 026 026 026 026 026 026 026 026 026 026 026 026 000 000 000 000⏎
+000 000 000 013 013 013 013 026 026 026 026 026 026 026 026 026 026 026 026 026 000 000 000 000⏎
+000 000 000 000 000 000 000 026 026 026 026 026 026 026 026 026 026 026 026 026 000 000 000 000⏎
+000 000 000 000 000 000 000 026 026 026 026 026 026 026 026 026 026 026 026 026 000 000 000 000⏎
+000 000 000 000 000 000 000 026 026 026 026 026 026 026 026 026 026 026 026 026 000 000 000 000⏎
+000 000 000 000 000 000 000 026 026 026 026 026 026 026 026 026 026 026 026 026 000 000 000 000⏎
+000 000 000 000 000 000 000 026 026 026 026 026 026 026 026 026 026 026 026 026 000 000 000 000⏎
+000 000 000 000 000 000 000 026 026 026 026 026 026 026 026 026 026 026 026 026 000 000 000 000⏎
+000 000 000 000 000 000 000 026 026 026 026 026 026 026 026 026 026 026 026 026 000 000 000 000⏎
+000 000 000 000 000 000 000 026 026 026 026 026 026 026 026 026 026 026 026 026 000 000 000 000⏎
+000 000 000 000 000 000 000 026 026 026 026 026 026 026 026 026 026 026 026 026 000 000 000 000⏎
+000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000⏎
+000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000⏎
+000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000⏎
+000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000⏎
+000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000⏎
+
+W programie funkcja main nie jest testowana.
+
+Uwagi
+
+    W programie nie wolno używać operatora [].
+
