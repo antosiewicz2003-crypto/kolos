@@ -1,0 +1,74 @@
+{
+  "auc": 0.7867167827750954,
+  "accuracy": 0.8163538873994638,
+  "f1": 0.794380476798376,
+  "precision": 0.7969727366984759,
+  "recall": 0.8163538873994638,
+  "confusion": [
+    {
+      "label": 0,
+      "prediction": 0,
+      "count": 4419
+    },
+    {
+      "label": 0,
+      "prediction": 1,
+      "count": 248
+    },
+    {
+      "label": 1,
+      "prediction": 0,
+      "count": 848
+    },
+    {
+      "label": 1,
+      "prediction": 1,
+      "count": 453
+    }
+  ],
+  "top_features": [
+    {
+      "feature": "PAY_0",
+      "importance": 0.29739189714108066
+    },
+    {
+      "feature": "delay_count",
+      "importance": 0.19664978294308397
+    },
+    {
+      "feature": "PAY_2",
+      "importance": 0.08208231908278477
+    },
+    {
+      "feature": "PAY_3",
+      "importance": 0.0475413678072361
+    },
+    {
+      "feature": "PAY_4",
+      "importance": 0.045382280213142764
+    },
+    {
+      "feature": "PAY_6",
+      "importance": 0.03327357889549547
+    },
+    {
+      "feature": "avg_pay",
+      "importance": 0.026111066486564215
+    },
+    {
+      "feature": "LIMIT_BAL",
+      "importance": 0.025611387228493102
+    },
+    {
+      "feature": "pay_bill_ratio",
+      "importance": 0.02426619283097772
+    },
+    {
+      "feature": "util_ratio",
+      "importance": 0.021418424675214872
+    }
+  ],
+  "algorithm": "rf",
+  "n_train": 24032,
+  "n_test": 5968
+}
