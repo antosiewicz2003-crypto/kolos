@@ -186,8 +186,8 @@ Projekt lokalny / Colab jest przenaszalny na Azure Databricks:
 2. **T2 potwierdzona eksploracyjnie:** wyższe przedziały `util_ratio` wiążą się z wyższym odsetkiem defaultów (`04_util_ratio.png`).
 3. **T3 potwierdzona:** AUC ≈ 0.79 — model nadaje się jako baza scorecardu kredytowego na Spark.
 4. **T4 zademonstrowana:** Kafka/JSONL → scorowanie ryzyka w mikro-batchach; agregacje godzinowe gotowe pod dashboard KPI.
-4. **Niezbalansowanie klas:** warto rozważyć wagowanie klas / oversampling w kolejnej iteracji (nie zmienia to architektury Big Data).
-5. **Użyteczność biznesowa:**
+5. **Niezbalansowanie klas:** warto rozważyć wagowanie klas / oversampling w kolejnej iteracji (nie zmienia to architektury Big Data).
+6. **Użyteczność biznesowa:**
    - **Credit risk:** decyzje o limicie i prowizji,
    - **Collections:** priorytet windykacji dla `risk_level=HIGH`,
    - **Monitoring portfela:** agregacje minutowe/godzinowe z streamu jako KPI dashboardu.
