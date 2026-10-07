@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+data/processed/
+data/models/**
+!data/models/metrics_rf.json
+!data/models/streaming_summary.json
+data/stream_sim/
+*.parquet
+spark-warehouse/
+metastore_db/
+derby.log
+.venv/
+venv/
+*.log
+# zachowujemy reports/figures/*.png w repo (do sprawozdania)
